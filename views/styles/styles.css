@@ -1,12 +1,22 @@
 
 .navbar-brand{
-    font-size: 30px;
+    font-size: 40px;
     font-weight: bold;
 }
-.navbar-text{
-    font-size: 20px;
-    padding-right: 20px;
+
+.navbar-link {
+    float: right;
+    text-align: left;
+    color: rgb(179, 179, 179);
+    text-decoration: none;
+    margin-right: 3rem;
+    font-size: 1.5rem
 }
+.navbar-link:hover{
+    color: rgb(143, 142, 142);
+    text-decoration: none;
+}
+
 
 .card-deck{
     margin: 30px;
@@ -15,4 +25,5 @@
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     grid-gap: 1rem;
 }
+
 
