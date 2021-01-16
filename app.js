@@ -13,6 +13,10 @@ app.get('/', function (req, res) {
     let games = ['warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby'];
     res.render('index', { games: games});
 });
+
+app.get('/warcaby', function (req, res) {
+    res.render('game-page', { game: 'warcaby'});
+});
 app.listen(3000, function () {
     console.log('Example app listening on port 3000!');
 });
