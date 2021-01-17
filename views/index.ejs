@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/navbar') %>
+    <div class="card-deck">
+        <% games.forEach(function(game) { %>
+            <%- include('partials/game-card', {game: game}) %>
+        <% }) %>
+    </div>
+    <%- include('partials/bootstrap-scripts') %>
+  </body>
+</html>
