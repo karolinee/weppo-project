@@ -10,51 +10,6 @@ var pool = new Pool({
   port: 5432,
 });
 
-//examples of database's interface uses
-database.createRoom(pool, "tictactoe", 3781014, 3781014, (err, res) => {
-  if (err) {
-    console.log("createRoom");
-    console.log(err);
-  }
-
-  database.changeStateTicTacToe(
-    pool,
-    3781014,
-    "{{1,2,0},{0,0,0},{2,1,1}}",
-    (err, res) => {
-      if (err) {
-        console.log("changeState");
-        console.log(err);
-      }
-      database.addSecondPlayer(
-        pool,
-        "tictactoe",
-        3781014,
-        1234567,
-        (err, res) => {
-          if (err) {
-            console.log("addsecondplayer");
-            console.log(err);
-          }
-
-          database.getRoomState(pool, "tictactoe", 3781014, (err, res) => {
-            if (err) {
-              console.log("getRoomState");
-              console.log(err);
-            }
-            console.log(res);
-	      database.destroyRoom(pool, 'tictactoe', 3781014, (err,res) => {
-		  if (err) {
-		      console.log('destroyroom');
-		      console.log(err);
-		  }});
-          });
-        }
-      );
-    }
-  );
-});
-
 app.set("view engine", "ejs");
 app.set("views", "./views");
 app.use("/styles", express.static(__dirname + "/views/styles/"));
