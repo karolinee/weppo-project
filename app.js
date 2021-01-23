@@ -1,8 +1,11 @@
 var database = require("./lib/databaseUtils.js");
 var express = require('express');
 var session = require('express-session');
+var multer = require('multer');
 
 var app = express();
+var upload = multer();
+
 var Pool = require("pg").Pool;
 var pool = new Pool({
   user: "mikolaj",
@@ -23,28 +26,35 @@ app.use(
 );
 
 app.use(session({
-    resave: true, saveUninitialized: true, secret:
-        'qewhiugriasgy'
+  resave: true, saveUninitialized: true, secret:
+    'qewhiugriasgy'
 }));
 
 
+app.post('/nickchange', upload.single(), (req, res) => {
+  let games = ['warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby'];
+  req.session.name = req.body.userid;
+  res.render('index', { games: games, nick:  req.session.name, sesID : req.sessionID});
+});
+
+
 app.get('/', function (req, res) {
-    let games = ['warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby'];
-    let sesID = req.sessionID;
-    if (req.session){
-        sesID = 'cahir' + sesID.slice(0,4)
-    }
-    res.render('index', { games: games, sesID : sesID});
+  let games = ['warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby'];
+
+  if (req.session.name == undefined)
+    req.session.name = 'cahir' + req.sessionID.slice(0, 4)
+
+  res.render('index', { games: games, nick: req.session.name, sesID : req.sessionID });
 });
 
 app.get('/warcaby', function (req, res) {
-    let sesID = req.sessionID;
-    if (req.session){
-        sesID = 'cahir' + sesID.slice(0,4)
-    }
-    res.render('game-page', { game: 'warcaby', sesID:sesID});
+
+  if (req.session.name == undefined)
+    req.session.name = 'cahir' + req.sessionID.slice(0, 4)
+  res.render('game-page', { game: 'warcaby', nick: req.session.name, sesID : req.sessionID });
 });
-  
+
+
 app.listen(3000, function () {
   console.log("Example app listening on port 3000!");
 });
