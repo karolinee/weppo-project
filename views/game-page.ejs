@@ -7,9 +7,14 @@
     <%- include('partials/navbar', {nick:nick}) %>
     <nav class="navbar navbar-light bg-light navbar-reverse">
         <span class="navbar-brand mb-0 h1"><%= game %></span>
-        <a href="/<%= game %>" class="btn btn-secondary" >Utwórz pokój</a>
+        <a href="/<%= game %>" class="btn btn-secondary" id="new">Utwórz pokój</a>
+	<span id='nick' hidden>
+    	<%= JSON.stringify(nick); %>
+	</span>
     </nav>
+    <script src="/socket.io/socket.io.js"></script>
     <%- include('partials/bootstrap-scripts') %>
+    <script src="/scripts/main.js"></script>
   </body>
 </html>
 
