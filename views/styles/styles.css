@@ -26,4 +26,12 @@
     grid-gap: 1rem;
 }
 
+input[type="text"]
+{
+    color: rgb(179, 179, 179); 
+    background-color: transparent; 
+    border: 0px solid;
+    text-align:right;
+    width: 220px
 
+}

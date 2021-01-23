@@ -31,7 +31,7 @@ app.use(session({
 }));
 
 
-app.post('/ajax', upload.single(), (req, res) => {
+app.post('/nickchange', upload.single(), (req, res) => {
   let games = ['warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby'];
   req.session.name = req.body.userid;
   res.render('index', { games: games, sesID:  req.session.name});
