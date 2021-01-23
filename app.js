@@ -34,7 +34,7 @@ app.use(session({
 app.post('/nickchange', upload.single(), (req, res) => {
   let games = ['warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby', 'warcaby'];
   req.session.name = req.body.userid;
-  res.render('index', { games: games, sesID:  req.session.name});
+  res.render('index', { games: games, nick:  req.session.name, sesID : req.sessionID});
 });
 
 
@@ -44,14 +44,14 @@ app.get('/', function (req, res) {
   if (req.session.name == undefined)
     req.session.name = 'cahir' + req.sessionID.slice(0, 4)
 
-  res.render('index', { games: games, sesID: req.session.name });
+  res.render('index', { games: games, nick: req.session.name, sesID : req.sessionID });
 });
 
 app.get('/warcaby', function (req, res) {
 
   if (req.session.name == undefined)
     req.session.name = 'cahir' + req.sessionID.slice(0, 4)
-  res.render('game-page', { game: 'warcaby', sesID: req.session.name });
+  res.render('game-page', { game: 'warcaby', nick: req.session.name, sesID : req.sessionID });
 });
 
 
