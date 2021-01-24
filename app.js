@@ -67,21 +67,34 @@ app.get("/", function (req, res) {
   if (req.session.name == undefined)
     req.session.name = "cahir" + req.sessionID.slice(0, 4);
 
+<<<<<<< HEAD
   res.render("index", {
     games: games,
     nick: req.session.name,
     sesID: req.sessionID,
   });
+=======
+  res.render('index', { games: games, nick: req.session.name, sesID : req.sessionID});
+>>>>>>> 356bccb3c52cddd396afd754eee7132c6d87f27f
 });
 
 app.get("/warcaby", function (req, res) {
   if (req.session.name == undefined)
+<<<<<<< HEAD
     req.session.name = "cahir" + req.sessionID.slice(0, 4);
   res.render("game-page", {
     game: "warcaby",
     nick: req.session.name,
     sesID: req.sessionID,
   });
+=======
+    req.session.name = 'cahir' + req.sessionID.slice(0, 4)
+
+  //let rooms = io.nsps['/'].adapter.rooms //jak będą pokoje i socket, pracuję na wersji bez socket io
+  let rooms = {"room1": {sockets: {}, length: 1}, "room2": {sockets: {}, length: 1}, "room3": {sockets: {}, length: 2}};
+
+  res.render('game-page', { game: 'warcaby', nick: req.session.name, sesID : req.sessionID, rooms: rooms});
+>>>>>>> 356bccb3c52cddd396afd754eee7132c6d87f27f
 });
 
 io.on("connection", function (socket) {
