@@ -44,14 +44,18 @@ app.get('/', function (req, res) {
   if (req.session.name == undefined)
     req.session.name = 'cahir' + req.sessionID.slice(0, 4)
 
-  res.render('index', { games: games, nick: req.session.name, sesID : req.sessionID });
+  res.render('index', { games: games, nick: req.session.name, sesID : req.sessionID});
 });
 
 app.get('/warcaby', function (req, res) {
 
   if (req.session.name == undefined)
     req.session.name = 'cahir' + req.sessionID.slice(0, 4)
-  res.render('game-page', { game: 'warcaby', nick: req.session.name, sesID : req.sessionID });
+
+  //let rooms = io.nsps['/'].adapter.rooms //jak będą pokoje i socket, pracuję na wersji bez socket io
+  let rooms = {"room1": {sockets: {}, length: 1}, "room2": {sockets: {}, length: 1}, "room3": {sockets: {}, length: 2}};
+
+  res.render('game-page', { game: 'warcaby', nick: req.session.name, sesID : req.sessionID, rooms: rooms});
 });
 
 

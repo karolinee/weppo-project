@@ -7,8 +7,21 @@
     <%- include('partials/navbar', {nick:nick}) %>
     <nav class="navbar navbar-light bg-light navbar-reverse">
         <span class="navbar-brand mb-0 h1"><%= game %></span>
-        <a href="/<%= game %>" class="btn btn-secondary" >Utwórz pokój</a>
+        <button type="button" class="btn btn-secondary" >Utwórz pokój</button>
     </nav>
+    <ul class="list-group">
+      <% for(let roomName in rooms){ %>
+        <% if(rooms[roomName].length == 1) {%>
+          <li class="list-group-item clearfix">
+            <%= roomName %><span class="badge badge-light">1/2 graczy</span>
+            <button type="button" class="btn btn-success btn-sm" onclick="join('<%= roomName %>')" >Dołącz do gry</button>
+        </li>
+        <% } else if(rooms[roomName].length == 2) {%>
+          <li class="list-group-item"><%= roomName %><span class="badge badge-light">2/2 graczy</span>
+          </li>
+        <% } %>
+      <% } %>
+    </ul>
     <%- include('partials/bootstrap-scripts') %>
   </body>
 </html>
