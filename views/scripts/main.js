@@ -19,6 +19,7 @@
         player: sesID,
         name: name,
       });
+      $(".list-group").css("display", "none");
     });
 
     socket.on("user has left", (roomID) => {

@@ -26,16 +26,17 @@ app.use(
   })
 );
 
+let games = [
+  "warcaby",
+  "warcaby",
+  "warcaby",
+  "warcaby",
+  "warcaby",
+  "warcaby",
+  "warcaby",
+];
+
 app.post("/nickchange", upload.single(), (req, res) => {
-  let games = [
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-  ];
   req.session.name = req.body.userid;
   res.render("index", {
     games: games,
@@ -45,16 +46,6 @@ app.post("/nickchange", upload.single(), (req, res) => {
 });
 
 app.get("/", function (req, res) {
-  let games = [
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-    "warcaby",
-  ];
-
   if (req.session.name == undefined)
     req.session.name = "cahir" + req.sessionID.slice(0, 4);
 
@@ -69,9 +60,6 @@ app.get("/warcaby", function (req, res) {
   if (req.session.name == undefined)
     req.session.name = "cahir" + req.sessionID.slice(0, 4);
 
-  //let rooms = io.nsps['/'].adapter.rooms //jak będą pokoje i socket, pracuję na wersji bez socket io
-  // let rooms = io.sockets.adapter.rooms;
-
   res.render("game-page", {
     game: "warcaby",
     nick: req.session.name,
@@ -83,7 +71,7 @@ app.get("/warcaby", function (req, res) {
 var rooms = new Map();
 
 io.on("connection", function (socket) {
-  console.log("A user connected!"); // We'll replace this with our own events
+  console.log("A user connected!");
 
   socket.on("createRoom", (data) => {
     console.log(data.name + " room created");
@@ -101,9 +89,6 @@ io.on("connection", function (socket) {
   socket.on("joinRoom", (data) => {
     console.log(data.roomID + " joining room");
     console.log(data.player + " is joining");
-    // var room = io.sockets.adapter.rooms.get(data.name);
-    // console.log(io.sockets.adapter.rooms);
-    // console.log(room);
     var room = rooms.get(data.roomID);
     if (room && room.size == 1) {
       console.log("done");
