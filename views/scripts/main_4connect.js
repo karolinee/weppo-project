@@ -5,13 +5,13 @@
 
   $(document).ready(function () {
     var translateColumn = new Map();
-    translateColumn.set(1, "a");
-    translateColumn.set(2, "b");
-    translateColumn.set(3, "c");
-    translateColumn.set(4, "d");
-    translateColumn.set(5, "e");
-    translateColumn.set(6, "f");
-    translateColumn.set(7, "g");
+    translateColumn.set(0, "a");
+    translateColumn.set(1, "b");
+    translateColumn.set(2, "c");
+    translateColumn.set(3, "d");
+    translateColumn.set(4, "e");
+    translateColumn.set(5, "f");
+    translateColumn.set(6, "g");
     var sesID = JSON.parse($("#sesid").text());
     var name = JSON.parse($("#nick").text());
     var myTurn = false;
@@ -66,6 +66,7 @@
     });
 
     socket.on("gameEnded", (data) => {
+	console.log('game ended won: ' + data.won);
       let id = translateColumn.get(data.column) + (data.row + 1);
       let color = data.turn == 1 ? "red" : "black";
       $(`#${id}`).attr("class", color);
@@ -77,7 +78,7 @@
       if (myTurn) {
         myTurn = false;
         socket.emit("madeTurn", {
-          column: 1,
+          column: 0,
           roomID: myRoom,
         });
       }
@@ -86,7 +87,7 @@
       if (myTurn) {
         myTurn = false;
         socket.emit("madeTurn", {
-          column: 2,
+          column: 1,
           roomID: myRoom,
         });
       }
@@ -95,7 +96,7 @@
       if (myTurn) {
         myTurn = false;
         socket.emit("madeTurn", {
-          column: 3,
+          column: 2,
           roomID: myRoom,
         });
       }
@@ -104,7 +105,7 @@
       if (myTurn) {
         myTurn = false;
         socket.emit("madeTurn", {
-          column: 4,
+          column: 3,
           roomID: myRoom,
         });
       }
@@ -113,7 +114,7 @@
       if (myTurn) {
         myTurn = false;
         socket.emit("madeTurn", {
-          column: 5,
+          column: 4,
           roomID: myRoom,
         });
       }
@@ -122,7 +123,7 @@
       if (myTurn) {
         myTurn = false;
         socket.emit("madeTurn", {
-          column: 6,
+          column: 5,
           roomID: myRoom,
         });
       }
@@ -131,7 +132,7 @@
       if (myTurn) {
         myTurn = false;
         socket.emit("madeTurn", {
-          column: 7,
+          column: 6,
           roomID: myRoom,
         });
       }
