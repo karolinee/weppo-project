@@ -1,4 +1,3 @@
-var database = require("./lib/databaseUtils.js");
 var express = require("express");
 var session = require("express-session");
 var multer = require("multer");
@@ -26,9 +25,11 @@ app.use(
   })
 );
 
+var rooms4Connect = new Map();
+
 let games = [
   "warcaby",
-  "warcaby",
+  "4connect",
   "warcaby",
   "warcaby",
   "warcaby",
@@ -68,8 +69,22 @@ app.get("/warcaby", function (req, res) {
   });
 });
 
+app.get("/4connect", (req, res) => {
+  if (req.session.name == undefined)
+    req.session.name = "anon" + req.sessionID.slice(0, 4);
+
+  res.render("4connect", {
+    game: "4connect",
+    nick: req.session.name,
+    sesID: req.sessionID,
+    rooms: rooms4Connect,
+  });
+});
+
+require("./lib/4connect.js")(io, rooms4Connect);
 var rooms = new Map();
 
+/*
 io.on("connection", function (socket) {
   console.log("A user connected!");
 
@@ -123,6 +138,7 @@ io.on("connection", function (socket) {
     }
   });
 });
+*/
 
 server.listen(3000, function () {
   console.log("Example app listening on port 3000!");
