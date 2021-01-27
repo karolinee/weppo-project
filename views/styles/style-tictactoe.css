@@ -1,0 +1,13 @@
+
+.tictactoe-box{
+    border: solid black 1px;
+    width: 25%;
+    padding-bottom: 25%; /* = width for a square aspect ratio */
+}
+.tictactoe-box:hover{
+    background: #c7c7c7;
+}
+
+#tictactoe-board{
+    display: none;
+}

@@ -26,9 +26,10 @@ app.use(
 );
 
 var rooms4Connect = new Map();
+var roomsTictactoe = new Map();
 
 let games = [
-  "warcaby",
+  "tictactoe",
   "4connect",
   "warcaby",
   "warcaby",
@@ -83,6 +84,20 @@ app.get("/4connect", (req, res) => {
 
 require("./lib/4connect.js")(io, rooms4Connect);
 var rooms = new Map();
+
+app.get("/tictactoe", (req, res) => {
+  if (req.session.name == undefined)
+    req.session.name = "anon" + req.sessionID.slice(0, 4);
+
+  res.render("tictactoe", {
+    game: "tictactoe",
+    nick: req.session.name,
+    sesID: req.sessionID,
+    rooms: roomsTictactoe,
+  });
+});
+
+require("./lib/tictactoe.js")(io, roomsTictactoe);
 
 /*
 io.on("connection", function (socket) {
