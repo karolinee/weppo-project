@@ -1,0 +1,45 @@
+module.exports = function (io, rooms4Connect) {
+  let nsp = io.of("/4connect");
+
+  nsp.on("connection", (socket) => {
+    console.log("A user connected to 4connect!");
+
+    socket.on("createRoom", (data) => {
+      socket.join(data.sesID);
+      rooms4Connect = rooms4Connect.set(data.sesID, {
+        room: data.sesID,
+        name: data.name,
+        player1: data.sesId,
+        player2: NaN,
+        size: 1,
+      });
+    });
+
+    socket.on("joinRoom", (data) => {
+      let room = rooms4Connect.get(data.roomID);
+      socket.join(data.roomID);
+      // socket.broadcast.to(data.roomID).emit('player1', {});
+      // socket.emit('player2', {room: data.name});
+      room.player2 = data.player;
+      room.size = 2;
+      rooms4Connect.set(data.roomID, room);
+    });
+
+    socket.on("disconnecting", (reason) => {
+      for (let roomID of socket.rooms) {
+        if (roomID != socket.id) {
+          socket.to(roomID).emit("user has left", roomID);
+          rooms4Connect.delete(roomID);
+        }
+      }
+    });
+
+    socket.on("leaveRoom", (data) => {
+      if (!data.forced) {
+        socket.to(data.roomID).emit("user has left", data.roomID);
+        rooms4Connect.delete(data.roomID);
+      }
+      socket.leave(data.roomID);
+    });
+  });
+};
