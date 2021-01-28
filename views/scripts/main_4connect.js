@@ -41,7 +41,6 @@
       $(".list-group").css("display", "none");
       $("#game-board").css("display", "block");
       player.myRoom = data.roomID;
-      player.player = data.player;
     });
 
     socket.on("cannotCreateRoom", (_) => {
@@ -62,13 +61,13 @@
 
     socket.on("gameStarted", (data) => {
       console.log("game started" + data.you);
-      player = data.you;
-      player.myTurn = data.turn == player ? true : false;
+      player.player = data.you;
+      player.myTurn = data.turn == player.player;
     });
 
     socket.on("illegalMove", (data) => {
-      console.log("illegalMove");
-      player.myTurn = player.myTurn == data.turn;
+      console.log("illegalMove " + data.turn);
+      player.myTurn = player.player == data.turn;
     });
 
     socket.on("moveMade", (data) => {
@@ -76,7 +75,7 @@
       let id = translateColumn.get(data.column) + (data.row + 1);
       let color = data.turn == 1 ? "red" : "black";
       $(`#${id}`).attr("class", color);
-      player.myTurn = data.turn == player;
+      player.myTurn = data.turn == player.player;
     });
 
     socket.on("gameEnded", (data) => {
@@ -94,6 +93,7 @@
         socket.emit("madeTurn", {
           column: 0,
           roomID: player.myRoom,
+          player: player.player,
         });
       }
     });
@@ -103,6 +103,7 @@
         socket.emit("madeTurn", {
           column: 1,
           roomID: player.myRoom,
+          player: player.player,
         });
       }
     });
@@ -112,6 +113,7 @@
         socket.emit("madeTurn", {
           column: 2,
           roomID: player.myRoom,
+          player: player.player,
         });
       }
     });
@@ -121,6 +123,7 @@
         socket.emit("madeTurn", {
           column: 3,
           roomID: player.myRoom,
+          player: player.player,
         });
       }
     });
@@ -130,6 +133,7 @@
         socket.emit("madeTurn", {
           column: 4,
           roomID: player.myRoom,
+          player: player.player,
         });
       }
     });
@@ -139,6 +143,7 @@
         socket.emit("madeTurn", {
           column: 5,
           roomID: player.myRoom,
+          player: player.player,
         });
       }
     });
@@ -148,6 +153,7 @@
         socket.emit("madeTurn", {
           column: 6,
           roomID: player.myRoom,
+          player: player.player,
         });
       }
     });
