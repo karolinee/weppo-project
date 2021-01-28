@@ -32,22 +32,49 @@
         <% } %>
       <% } %>
     </ul>
-    <div class="container" id="tictactoe-board">
-        <div class="row tictactoe-row">
-            <div class="col tictactoe-box" id="00"></div>
-            <div class="col tictactoe-box" id="01"></div>
-            <div class="col tictactoe-box" id="02"></div>
+    <div class="container"  id="tictactoe-board">
+      <div class="row">
+        <div class="col-12">
+          <h5 id="upperLabel">Twoja kolej</h5>
         </div>
-        <div class="row tictactoe-row">
-            <div class="col tictactoe-box" id="10"></div>
-            <div class="col tictactoe-box" id="11"></div>
-            <div class="col tictactoe-box" id="12"></div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="board-container container">
+            <div class="row tictactoe-row">
+                <div class="col tictactoe-box has-hover" id="00"></div>
+                <div class="col tictactoe-box has-hover" id="01"></div>
+                <div class="col tictactoe-box has-hover" id="02"></div>
+            </div>
+            <div class="row tictactoe-row">
+                <div class="col tictactoe-box has-hover" id="10"></div>
+                <div class="col tictactoe-box has-hover" id="11"></div>
+                <div class="col tictactoe-box has-hover" id="12"></div>
+            </div>
+            <div class="row tictactoe-row">
+                <div class="col tictactoe-box has-hover" id="20"></div>
+                <div class="col tictactoe-box has-hover" id="21"></div>
+                <div class="col tictactoe-box has-hover" id="22"></div>
+            </div>
+          </div>
         </div>
-        <div class="row tictactoe-row">
-            <div class="col tictactoe-box" id="20"></div>
-            <div class="col tictactoe-box" id="21"></div>
-            <div class="col tictactoe-box" id="22"></div>
+      </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" id="gameEndedModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Koniec gry</h5>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <a href="/" role="button" class="btn btn-secondary">Wyjdź</a>
+          </div>
         </div>
+      </div>
     </div>
     
   </body>

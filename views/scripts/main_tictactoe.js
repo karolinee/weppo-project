@@ -18,6 +18,7 @@
       $("#new").css("display", "none"); //schowanie przycisku nowy pokój
       $(".list-group").css("display", "none"); //ukrycie pokoi
       $("#tictactoe-board").css("display", "block"); //wyświetlenie planszy
+      $("#upperLabel").text("Waiting for second player...");
     })
 
     $("button[data-roomID]").on("click", (event) => {
@@ -34,6 +35,7 @@
       $("#new").css("display", "none"); //schowanie przycisku nowy pokój
       $(".list-group").css("display", "none"); //ukrycie pokoi
       $("#tictactoe-board").css("display", "block"); //wyświetlenie planszy
+
     });
 
     socket.on("user has left", (roomID) => {
@@ -42,6 +44,11 @@
         player: sesID,
         forced: true,
       });
+      if (!$('#gameEndedModal').hasClass('show')) {
+        $('#gameEndedModal .modal-body').text("Oh no, your opponent has left the game!");
+        $('#gameEndedModal').modal("show");
+      }
+      
     });   
 
     socket.on("gameStarted", (data) => {
@@ -49,6 +56,10 @@
       player = data.you;
       myTurn = data.turn == player ? true : false;
       console.log(player + " my turn " + myTurn);
+      let text = "";
+      if(myTurn) text = "Make your move";
+      else text="Waiting for opponent move...";
+      $("#upperLabel").text(text);
     });
 
     socket.on("illegalMove", () => {
@@ -60,32 +71,44 @@
       console.log("wykonał ruch na pos " + data.pos);
       console.log("teraz kolej " + data.turn);
       if(data.turn == 2){
-        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
+        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
       </svg>`);
       }
       else{
-        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
       </svg>`);
       }
+      $(`#${data.pos}`).removeClass("has-hover");
       myTurn = data.turn == player;
+      if(myTurn) text = "Make your move";
+      else text="Waiting for opponent move...";
+      $("#upperLabel").text(text);
     })
 
     socket.on("gameEnded", (data) => {
       console.log("wykonał ruch na pos " + data.pos);
       console.log("gra zakończona");
       if(data.turn == 2){
-        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
+        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
       </svg>`);
+      
       }
       else{
-        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+        $(`#${data.pos}`).append(`<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
         <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
       </svg>`);
       }
-      //$('#gameEndedModal').modal("show", {backdrop: 'static', keyboard: false});
+      $(`#${data.pos}`).removeClass("has-hover");
+      console.log("end " + data.end);
+      let text = "";
+      if(data.won == 0) text="It's a draw!";
+      else if(data.turn == player) text="Oh no, you've lost. Better luck next time!";
+      else text = "Congratulations! You've won!"
+      $('#gameEndedModal .modal-body').text(text);
+      $('#gameEndedModal').modal("show");
     })
 
 
