@@ -12,36 +12,50 @@
     translateColumn.set(4, "e");
     translateColumn.set(5, "f");
     translateColumn.set(6, "g");
-    var sesID = JSON.parse($("#sesid").text());
-    var name = JSON.parse($("#nick").text());
-    var myTurn = false;
-    var myRoom = sesID;
-    var player;
+    let player = {
+      sesID: JSON.parse($("#sesid").text()),
+      name: JSON.parse($("#nick").text()),
+      myTurn: false,
+      myRoom: NaN,
+      player: NaN,
+    };
+
     $("#new").on("click", function () {
       console.log("new room button");
       $("#variableJSON").remove();
-      console.log(name);
-      socket.emit("createRoom", { name: name, sesID: sesID });
-      $(".list-group").css("display", "none");
-      $("#game-board").css("display", "block");
+      console.log(player.name);
+      socket.emit("createRoom", { name: player.name, sesID: player.sesID });
     });
 
     $("button[data-roomID]").on("click", (event) => {
       console.log("joining room");
       socket.emit("joinRoom", {
         roomID: $(event.target).data("roomid"),
-        player: sesID,
-        name: name,
+        player: player.sesID,
+        name: player.name,
       });
-      myRoom = $(event.target).data("roomid");
+      player.myRoom = $(event.target).data("roomid");
+    });
+
+    socket.on("roomJoined", (data) => {
       $(".list-group").css("display", "none");
       $("#game-board").css("display", "block");
+      player.myRoom = data.roomID;
+      player.player = data.player;
+    });
+
+    socket.on("cannotCreateRoom", (_) => {
+      console.log("cannot create room");
+    });
+
+    socket.on("cannotJoinRoom", (_) => {
+      console.log("cannot join this room");
     });
 
     socket.on("user has left", (roomID) => {
       socket.emit("leaveRoom", {
         roomID: roomID,
-        player: sesID,
+        player: player.sesID,
         forced: true,
       });
     });
@@ -49,12 +63,12 @@
     socket.on("gameStarted", (data) => {
       console.log("game started" + data.you);
       player = data.you;
-      myTurn = data.turn == player ? true : false;
+      player.myTurn = data.turn == player ? true : false;
     });
 
-    socket.on("illegalMove", (_) => {
+    socket.on("illegalMove", (data) => {
       console.log("illegalMove");
-      myTurn = true;
+      player.myTurn = player.myTurn == data.turn;
     });
 
     socket.on("moveMade", (data) => {
@@ -62,78 +76,78 @@
       let id = translateColumn.get(data.column) + (data.row + 1);
       let color = data.turn == 1 ? "red" : "black";
       $(`#${id}`).attr("class", color);
-      myTurn = data.turn == player;
+      player.myTurn = data.turn == player;
     });
 
     socket.on("gameEnded", (data) => {
-	console.log('game ended won: ' + data.won);
+      console.log("game ended won: " + data.won);
       let id = translateColumn.get(data.column) + (data.row + 1);
       let color = data.turn == 1 ? "red" : "black";
       $(`#${id}`).attr("class", color);
-      myTurn = false;
+      player.myTurn = false;
       //tutaj jakoś trzeba obwieścić kto wygrał
     });
 
     $("#columnOne").on("click", (data) => {
-      if (myTurn) {
-        myTurn = false;
+      if (player.myTurn) {
+        player.myTurn = false;
         socket.emit("madeTurn", {
           column: 0,
-          roomID: myRoom,
+          roomID: player.myRoom,
         });
       }
     });
     $("#columnTwo").on("click", (data) => {
-      if (myTurn) {
-        myTurn = false;
+      if (player.myTurn) {
+        player.myTurn = false;
         socket.emit("madeTurn", {
           column: 1,
-          roomID: myRoom,
+          roomID: player.myRoom,
         });
       }
     });
     $("#columnThree").on("click", (data) => {
-      if (myTurn) {
-        myTurn = false;
+      if (player.myTurn) {
+        player.myTurn = false;
         socket.emit("madeTurn", {
           column: 2,
-          roomID: myRoom,
+          roomID: player.myRoom,
         });
       }
     });
     $("#columnFour").on("click", (data) => {
-      if (myTurn) {
-        myTurn = false;
+      if (player.myTurn) {
+        player.myTurn = false;
         socket.emit("madeTurn", {
           column: 3,
-          roomID: myRoom,
+          roomID: player.myRoom,
         });
       }
     });
     $("#columnFive").on("click", (data) => {
-      if (myTurn) {
-        myTurn = false;
+      if (player.myTurn) {
+        player.myTurn = false;
         socket.emit("madeTurn", {
           column: 4,
-          roomID: myRoom,
+          roomID: player.myRoom,
         });
       }
     });
     $("#columnSix").on("click", (data) => {
-      if (myTurn) {
-        myTurn = false;
+      if (player.myTurn) {
+        player.myTurn = false;
         socket.emit("madeTurn", {
           column: 5,
-          roomID: myRoom,
+          roomID: player.myRoom,
         });
       }
     });
     $("#columnSeven").on("click", (data) => {
-      if (myTurn) {
-        myTurn = false;
+      if (player.myTurn) {
+        player.myTurn = false;
         socket.emit("madeTurn", {
           column: 6,
-          roomID: myRoom,
+          roomID: player.myRoom,
         });
       }
     });
