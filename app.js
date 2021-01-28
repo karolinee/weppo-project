@@ -31,25 +31,35 @@ var roomsTictactoe = new Map();
 let games = [
   "tictactoe",
   "4connect",
-  "warcaby",
-  "warcaby",
-  "warcaby",
-  "warcaby",
-  "warcaby",
+  "warcaby"
 ];
 
-app.post("/nickchange", upload.single(), (req, res) => {
+app.get("/nickchange", function(req, res) {
+  if (req.session.name == undefined)
+    req.session.name = "anon";
+  res.render("nickchange", {nick: req.session.name});
+});
+
+app.post("/nickchange", function(req, res) {
+  let newNick = req.body.newNick;
+  if(newNick){
+    req.session.name = newNick;
+  }
+  res.redirect("/");
+});
+
+/*app.post("/nickchange", upload.single(), (req, res) => {
   req.session.name = req.body.userid;
   res.render("index", {
     games: games,
     nick: req.session.name,
     sesID: req.sessionID,
   });
-});
+});*/
 
 app.get("/", function (req, res) {
   if (req.session.name == undefined)
-    req.session.name = "cahir" + req.sessionID.slice(0, 4);
+    req.session.name = "anon";
 
   res.render("index", {
     games: games,
@@ -60,7 +70,7 @@ app.get("/", function (req, res) {
 
 app.get("/warcaby", function (req, res) {
   if (req.session.name == undefined)
-    req.session.name = "cahir" + req.sessionID.slice(0, 4);
+    req.session.name = "anon";
 
   res.render("game-page", {
     game: "warcaby",
@@ -72,7 +82,7 @@ app.get("/warcaby", function (req, res) {
 
 app.get("/4connect", (req, res) => {
   if (req.session.name == undefined)
-    req.session.name = "anon" + req.sessionID.slice(0, 4);
+    req.session.name = "anon";
 
   res.render("4connect", {
     game: "4connect",
@@ -87,7 +97,7 @@ var rooms = new Map();
 
 app.get("/tictactoe", (req, res) => {
   if (req.session.name == undefined)
-    req.session.name = "anon" + req.sessionID.slice(0, 4);
+    req.session.name = "anon";
 
   res.render("tictactoe", {
     game: "tictactoe",

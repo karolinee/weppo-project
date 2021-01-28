@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <%- include('partials/navbar', {nick: nick}) %>
+    <div class="container" style="display: block; text-align: center; padding: 50px;"> 
+      <form action="/nickchange" method="POST" style="display: inline-block; margin-left: auto; margin-right: auto;">
+        <div class="form-group">
+          <h4 style="padding: 10px;">Wpisz nowy nick:</h4>
+          <input type="text" class="form-control"  name="newNick" placeholder="<%= nick %>" maxlength="16">
+        </div>
+        <button type="submit" class="btn btn-secondary">Zmień nick</button>
+      </form>
+    </div>
+    <%- include('partials/bootstrap-scripts') %>
+  </body>
+</html>

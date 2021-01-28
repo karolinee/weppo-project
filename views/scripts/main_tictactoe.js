@@ -13,8 +13,7 @@
     $("#new").on("click", () => {
       console.log("new tictactoe room");
       socket.emit("createRoom",{name: name, sesID: sesID} );
-      $("#userid").prop("disabled", true); //wyłączenie input field userid
-      $("#btApp").css("pointer-events", "none"); //wyłączenie przycisku pena
+      $("#buttonNickChange").css("visibility", "hidden");
       $("#new").css("display", "none"); //schowanie przycisku nowy pokój
       $(".list-group").css("display", "none"); //ukrycie pokoi
       $("#tictactoe-board").css("display", "block"); //wyświetlenie planszy
@@ -30,8 +29,7 @@
       });
       myRoom = $(event.target).data("roomid");
       $(".list-group").css("display", "none");
-      $("#userid").prop("disabled", true); //wyłączenie input field userid
-      $("#btApp").css("pointer-events", "none"); //wyłączenie przycisku pena
+      $("#buttonNickChange").css("visibility", "hidden");
       $("#new").css("display", "none"); //schowanie przycisku nowy pokój
       $(".list-group").css("display", "none"); //ukrycie pokoi
       $("#tictactoe-board").css("display", "block"); //wyświetlenie planszy

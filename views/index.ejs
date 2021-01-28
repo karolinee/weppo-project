@@ -4,7 +4,7 @@
     <%- include('partials/head') %>
   </head>
   <body>
-    <%- include('partials/navbar', {nick:nick}) %>
+    <%- include('partials/navbar', {nick: nick}) %>
     <div class="card-deck">
         <% games.forEach(function(game) { %>
             <%- include('partials/game-card', {game: game}) %>
