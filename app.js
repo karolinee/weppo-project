@@ -100,62 +100,6 @@ app.get("/tictactoe", (req, res) => {
 
 require("./lib/tictactoe.js")(io, roomsTictactoe);
 
-/*
-io.on("connection", function (socket) {
-  console.log("A user connected!");
-
-  socket.on("createRoom", (data) => {
-    console.log(data.name + " room created");
-    socket.join(data.sesID);
-    socket.emit("newRoom", { room: data.sesID, name: data.name });
-    rooms = rooms.set(data.sesID, {
-      room: data.sesID,
-      name: data.name,
-      player1: data.sesID,
-      player2: NaN,
-      size: 1,
-    });
-  });
-
-  socket.on("joinRoom", (data) => {
-    console.log(data.roomID + " joining room");
-    console.log(data.player + " is joining");
-    var room = rooms.get(data.roomID);
-    if (room && room.size == 1) {
-      console.log("done");
-      socket.join(data.roomID);
-      socket.broadcast.to(data.roomID).emit("player1", {});
-      socket.emit("player2", { room: data.name });
-      room.player2 = data.player;
-      room.size = 2;
-      rooms = rooms.set(data.roomID, room);
-    } else {
-      console.log("this room doesn't exist");
-    }
-  });
-
-  socket.on("disconnecting", (reason) => {
-    console.log(socket.rooms);
-    for (let roomID of socket.rooms) {
-      if (roomID != socket.id) {
-        socket.to(roomID).emit("user has left", roomID);
-        rooms.delete(roomID);
-      }
-    }
-  });
-
-  socket.on("leaveRoom", (data) => {
-    if (!data.forced) {
-      socket.to(data.roomID).emit("user has left", data.roomID);
-      socket.leave(data.roomID);
-      rooms.delete(data.roomID);
-    } else {
-      socket.leave(data.roomID);
-    }
-  });
-});
-*/
-
-server.listen(3000, function () {
+server.listen(process.env.PORT || 3000, function () {
   console.log("Example app listening on port 3000!");
 });
