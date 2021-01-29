@@ -3,6 +3,7 @@
   <head>
     <%- include('partials/head') %>
     <%- include('partials/bootstrap-scripts') %>
+    <link href="styles/style-4connect.css" rel="stylesheet" type="text/css">
     <script src="/socket.io/socket.io.js" ></script>
     <script src="/scripts/main_4connect.js"></script>
   </head>
@@ -34,64 +35,107 @@
         <% } %>
       <% } %>
     </ul>
-<div id="game-board">
-		<div id="columnOne">
-			<div id="a6" class="white"></div>
-			<div id="a5" class="white"></div>
-			<div id="a4" class="white"></div>
-			<div id="a3" class="white"></div>
-			<div id="a2" class="white"></div>
-			<div id="a1" class="white"></div>
+	<div class="container"  id="connect-board" style="display: none;">
+		<div class="row">
+		  <div class="col-12">
+			<h5 id="upperLabel">Twoja kolej</h5>
+		  </div>
 		</div>
-		<div id="columnTwo">
-			<div id="b6" class="white"></div>
-			<div id="b5" class="white"></div>
-			<div id="b4" class="white"></div>
-			<div id="b3" class="white"></div>
-			<div id="b2" class="white"></div>
-			<div id="b1" class="white"></div>
+		<div class="row">
+		  <div class="col-12">
+			<div class="board-container container">
+			  <div class="row connect-row">
+				  <div class="col connect-box has-hover 4-connect-column-0" id="05"></div>
+				  <div class="col connect-box has-hover 4-connect-column-1" id="15"></div>
+				  <div class="col connect-box has-hover 4-connect-column-2" id="25"></div>
+				  <div class="col connect-box has-hover 4-connect-column-3" id="35"></div>
+				  <div class="col connect-box has-hover 4-connect-column-4" id="45"></div>
+				  <div class="col connect-box has-hover 4-connect-column-5" id="55"></div>
+				  <div class="col connect-box has-hover 4-connect-column-6" id="65"></div>
+			  </div>
+			  <div class="row connect-row">
+				<div class="col connect-box has-hover 4-connect-column-0" id="04"></div>
+				<div class="col connect-box has-hover 4-connect-column-1" id="14"></div>
+				<div class="col connect-box has-hover 4-connect-column-2" id="24"></div>
+				<div class="col connect-box has-hover 4-connect-column-3" id="34"></div>
+				<div class="col connect-box has-hover 4-connect-column-4" id="44"></div>
+				<div class="col connect-box has-hover 4-connect-column-5" id="54"></div>
+				<div class="col connect-box has-hover 4-connect-column-6" id="64"></div>
+			</div>
+			<div class="row connect-row">
+				<div class="col connect-box has-hover 4-connect-column-0" id="03"></div>
+				<div class="col connect-box has-hover 4-connect-column-1" id="13"></div>
+				<div class="col connect-box has-hover 4-connect-column-2" id="23"></div>
+				<div class="col connect-box has-hover 4-connect-column-3" id="33"></div>
+				<div class="col connect-box has-hover 4-connect-column-4" id="43"></div>
+				<div class="col connect-box has-hover 4-connect-column-5" id="53"></div>
+				<div class="col connect-box has-hover 4-connect-column-6" id="63"></div>
+			</div>
+			<div class="row connect-row">
+				<div class="col connect-box has-hover 4-connect-column-0" id="02"></div>
+				<div class="col connect-box has-hover 4-connect-column-1" id="12"></div>
+				<div class="col connect-box has-hover 4-connect-column-2" id="22"></div>
+				<div class="col connect-box has-hover 4-connect-column-3" id="32"></div>
+				<div class="col connect-box has-hover 4-connect-column-4" id="42"></div>
+				<div class="col connect-box has-hover 4-connect-column-5" id="52"></div>
+				<div class="col connect-box has-hover 4-connect-column-6" id="62"></div>
+			</div>
+			<div class="row connect-row">
+				<div class="col connect-box has-hover 4-connect-column-0" id="01"></div>
+				<div class="col connect-box has-hover 4-connect-column-1" id="11"></div>
+				<div class="col connect-box has-hover 4-connect-column-2" id="21"></div>
+				<div class="col connect-box has-hover 4-connect-column-3" id="31"></div>
+				<div class="col connect-box has-hover 4-connect-column-4" id="41"></div>
+				<div class="col connect-box has-hover 4-connect-column-5" id="51"></div>
+				<div class="col connect-box has-hover 4-connect-column-6" id="61"></div>
+			</div>
+			<div class="row connect-row">
+				<div class="col connect-box has-hover 4-connect-column-0" id="00"></div>
+				<div class="col connect-box has-hover 4-connect-column-1" id="10"></div>
+				<div class="col connect-box has-hover 4-connect-column-2" id="20"></div>
+				<div class="col connect-box has-hover 4-connect-column-3" id="30"></div>
+				<div class="col connect-box has-hover 4-connect-column-4" id="40"></div>
+				<div class="col connect-box has-hover 4-connect-column-5" id="50"></div>
+				<div class="col connect-box has-hover 4-connect-column-6" id="60"></div>
+			</div>
+			  
+			  
+			
+			  
+			</div>
+		  </div>
 		</div>
-		<div id="columnThree">
-			<div id="c6" class="white"></div>
-			<div id="c5" class="white"></div>
-			<div id="c4" class="white"></div>
-			<div id="c3" class="white"></div>
-			<div id="c2" class="white"></div>
-			<div id="c1" class="white"></div>
-		</div>
-		<div id="columnFour">
-			<div id="d6" class="white"></div>
-			<div id="d5" class="white"></div>
-			<div id="d4" class="white"></div>
-			<div id="d3" class="white"></div>
-			<div id="d2" class="white"></div>
-			<div id="d1" class="white"></div>
-		</div>
-		<div id="columnFive">
-			<div id="e6" class="white"></div>
-			<div id="e5" class="white"></div>
-			<div id="e4" class="white"></div>
-			<div id="e3" class="white"></div>
-			<div id="e2" class="white"></div>
-			<div id="e1" class="white"></div>
-		</div>
-		<div id="columnSix">
-			<div id="f6" class="white"></div>
-			<div id="f5" class="white"></div>
-			<div id="f4" class="white"></div>
-			<div id="f3" class="white"></div>
-			<div id="f2" class="white"></div>
-			<div id="f1" class="white"></div>
-		</div>
-		<div id="columnSeven">
-			<div id="g6" class="white"></div>
-			<div id="g5" class="white"></div>
-			<div id="g4" class="white"></div>
-			<div id="g3" class="white"></div>
-			<div id="g2" class="white"></div>
-			<div id="g1" class="white"></div>
-		</div>
-	</div>
+	  </div>
+    <div class="modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" id="gameEndedModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Koniec gry</h5>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <a href="/" role="button" class="btn btn-secondary">Wyjdź</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="cantJoin">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Niepowodzenie</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          </div>
+        </div>
+      </div>
+    </div>
+ 
   </body>
 </html>
 

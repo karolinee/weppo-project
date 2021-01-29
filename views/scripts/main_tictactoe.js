@@ -15,7 +15,7 @@
     $("#new").on("click", () => {
       console.log("user " + player.name + "wants to create new tictactoe room");
       socket.emit("createRoom", {name: player.name, sesID: player.sesID} );
-    })
+    });
 
     $("button[data-roomID]").on("click", (event) => {
       console.log("user " + player.name + "wants to jaoin a room");
@@ -43,7 +43,7 @@
     });
 
     socket.on("cannotJoinRoom", (_) => {
-      $('#cantJoin .modal-body').text("Nie można dołączyć do pokoj.");
+      $('#cantJoin .modal-body').text("Nie można dołączyć do pokoju.");
       $('#cantJoin').modal("show");
     });
 
@@ -123,10 +123,10 @@
         $('#gameEndedModal .modal-body').text("Niestety, przegrałeś. Powodzenia następnym razem");
       }
       else {
-        $('#gameEndedModal .modal-body').text("Gratulację! Wygrałeś!");
+        $('#gameEndedModal .modal-body').text("Gratulacje! Wygrałeś!");
       }      
       $('#gameEndedModal').modal("show");
-    })
+    });
 
 
     $(".tictactoe-box").on("click", (event) => {

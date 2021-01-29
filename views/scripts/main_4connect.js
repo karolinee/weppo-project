@@ -38,31 +38,47 @@
     });
 
     socket.on("roomJoined", (data) => {
-      $(".list-group").css("display", "none");
-      $("#game-board").css("display", "block");
       player.myRoom = data.roomID;
+      $("#buttonNickChange").css("visibility", "hidden");
+      $("#buttonsToHide").css("visibility", "hidden");
+      $(".list-group").css("display", "none"); //ukrycie pokoi
+      $("#connect-board").css("display", "block"); //wyświetlenie planszy
+      $("#upperLabel").text("Czekanie na przeciwnika..");
     });
 
     socket.on("cannotCreateRoom", (_) => {
-      console.log("cannot create room");
+      $("#cantJoin .modal-body").text("Nie można stworzyć pokoju.");
+      $("#cantJoin").modal("show");
     });
 
     socket.on("cannotJoinRoom", (_) => {
-      console.log("cannot join this room");
+      $("#cantJoin .modal-body").text("Nie można dołączyć do pokoju.");
+      $("#cantJoin").modal("show");
     });
 
-    socket.on("user has left", (roomID) => {
+    socket.on("userHasLeft", (roomID) => {
       socket.emit("leaveRoom", {
         roomID: roomID,
         player: player.sesID,
         forced: true,
       });
+      if (!$("#gameEndedModal").hasClass("show")) {
+        $("#gameEndedModal .modal-body").text(
+          "O nie, Twój przeciwnik wyszedł z gry!"
+        );
+        $("#gameEndedModal").modal("show");
+      }
     });
 
     socket.on("gameStarted", (data) => {
       console.log("game started" + data.you);
       player.player = data.you;
       player.myTurn = data.turn == player.player;
+      if (player.myTurn) {
+        $("#upperLabel").text("Wykonaj swój ruch");
+      } else {
+        $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
+      }
     });
 
     socket.on("illegalMove", (data) => {
@@ -72,22 +88,36 @@
 
     socket.on("moveMade", (data) => {
       console.log("now moves " + data.turn);
-      let id = translateColumn.get(data.column) + (data.row + 1);
-      let color = data.turn == 1 ? "red" : "black";
-      $(`#${id}`).attr("class", color);
+      let id = "" + data.column + data.row;
+      let color = data.turn == 2 ? "red" : "yellow";
+      $(`#${id}`).css("background-color", color);
       player.myTurn = data.turn == player.player;
+      if (player.myTurn) {
+        $("#upperLabel").text("Wykonaj swój ruch");
+      } else {
+        $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
+      }
     });
 
     socket.on("gameEnded", (data) => {
       console.log("game ended won: " + data.won);
-      let id = translateColumn.get(data.column) + (data.row + 1);
-      let color = data.turn == 1 ? "red" : "black";
-      $(`#${id}`).attr("class", color);
+      let id = "" + data.column + data.row;
+      let color = data.turn == 2 ? "red" : "yellow";
+      $(`#${id}`).css("background-color", color);
       player.myTurn = false;
-      //tutaj jakoś trzeba obwieścić kto wygrał
+      if (data.won == 0) {
+        $("#gameEndedModal .modal-body").text("Remis!");
+      } else if (data.turn == player.player) {
+        $("#gameEndedModal .modal-body").text(
+          "Niestety, przegrałeś. Powodzenia następnym razem"
+        );
+      } else {
+        $("#gameEndedModal .modal-body").text("Gratulacje! Wygrałeś!");
+      }
+      $("#gameEndedModal").modal("show");
     });
 
-    $("#columnOne").on("click", (data) => {
+    $(".4-connect-column-0").on("click", (data) => {
       if (player.myTurn) {
         player.myTurn = false;
         socket.emit("madeTurn", {
@@ -97,7 +127,7 @@
         });
       }
     });
-    $("#columnTwo").on("click", (data) => {
+    $(".4-connect-column-1").on("click", (data) => {
       if (player.myTurn) {
         player.myTurn = false;
         socket.emit("madeTurn", {
@@ -107,7 +137,7 @@
         });
       }
     });
-    $("#columnThree").on("click", (data) => {
+    $(".4-connect-column-2").on("click", (data) => {
       if (player.myTurn) {
         player.myTurn = false;
         socket.emit("madeTurn", {
@@ -117,7 +147,7 @@
         });
       }
     });
-    $("#columnFour").on("click", (data) => {
+    $(".4-connect-column-3").on("click", (data) => {
       if (player.myTurn) {
         player.myTurn = false;
         socket.emit("madeTurn", {
@@ -127,7 +157,7 @@
         });
       }
     });
-    $("#columnFive").on("click", (data) => {
+    $(".4-connect-column-4").on("click", (data) => {
       if (player.myTurn) {
         player.myTurn = false;
         socket.emit("madeTurn", {
@@ -137,7 +167,7 @@
         });
       }
     });
-    $("#columnSix").on("click", (data) => {
+    $(".4-connect-column-5").on("click", (data) => {
       if (player.myTurn) {
         player.myTurn = false;
         socket.emit("madeTurn", {
@@ -147,7 +177,7 @@
         });
       }
     });
-    $("#columnSeven").on("click", (data) => {
+    $(".4-connect-column-6").on("click", (data) => {
       if (player.myTurn) {
         player.myTurn = false;
         socket.emit("madeTurn", {
@@ -157,5 +187,131 @@
         });
       }
     });
+    $(".4-connect-column-0").hover(
+      function () {
+        console.log("hej");
+        for (let idx = 0; idx < 6; idx++) {
+          if (
+            $(`#0${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
+            player.myTurn
+          )
+            $(`#0${idx}`).css("background-color", "rgb(230,230,230");
+        }
+      },
+      function () {
+        for (let idx = 0; idx < 6; idx++) {
+          if ($(`#0${idx}`).css("background-color") == "rgb(230, 230, 230)")
+            $(`#0${idx}`).css("background-color", "white");
+        }
+      }
+    );
+    $(".4-connect-column-1").hover(
+      function () {
+        console.log("hej");
+        for (let idx = 0; idx < 6; idx++) {
+          if (
+            $(`#1${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
+            player.myTurn
+          )
+            $(`#1${idx}`).css("background-color", "rgb(230,230,230");
+        }
+      },
+      function () {
+        for (let idx = 0; idx < 6; idx++) {
+          if ($(`#1${idx}`).css("background-color") == "rgb(230, 230, 230)")
+            $(`#1${idx}`).css("background-color", "white");
+        }
+      }
+    );
+    $(".4-connect-column-2").hover(
+      function () {
+        console.log("hej");
+        for (let idx = 0; idx < 6; idx++) {
+          if (
+            $(`#2${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
+            player.myTurn
+          )
+            $(`#2${idx}`).css("background-color", "rgb(230,230,230");
+        }
+      },
+      function () {
+        for (let idx = 0; idx < 6; idx++) {
+          if ($(`#2${idx}`).css("background-color") == "rgb(230, 230, 230)")
+            $(`#2${idx}`).css("background-color", "white");
+        }
+      }
+    );
+    $(".4-connect-column-3").hover(
+      function () {
+        console.log("hej");
+        for (let idx = 0; idx < 6; idx++) {
+          if (
+            $(`#3${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
+            player.myTurn
+          )
+            $(`#3${idx}`).css("background-color", "rgb(230,230,230");
+        }
+      },
+      function () {
+        for (let idx = 0; idx < 6; idx++) {
+          if ($(`#3${idx}`).css("background-color") == "rgb(230, 230, 230)")
+            $(`#3${idx}`).css("background-color", "white");
+        }
+      }
+    );
+    $(".4-connect-column-4").hover(
+      function () {
+        console.log("hej");
+        for (let idx = 0; idx < 6; idx++) {
+          if (
+            $(`#4${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
+            player.myTurn
+          )
+            $(`#4${idx}`).css("background-color", "rgb(230,230,230");
+        }
+      },
+      function () {
+        for (let idx = 0; idx < 6; idx++) {
+          if ($(`#4${idx}`).css("background-color") == "rgb(230, 230, 230)")
+            $(`#4${idx}`).css("background-color", "white");
+        }
+      }
+    );
+    $(".4-connect-column-5").hover(
+      function () {
+        console.log("hej");
+        for (let idx = 0; idx < 6; idx++) {
+          if (
+            $(`#5${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
+            player.myTurn
+          )
+            $(`#5${idx}`).css("background-color", "rgb(230,230,230");
+        }
+      },
+      function () {
+        for (let idx = 0; idx < 6; idx++) {
+          if ($(`#5${idx}`).css("background-color") == "rgb(230, 230, 230)")
+            $(`#5${idx}`).css("background-color", "white");
+        }
+      }
+    );
+    $(".4-connect-column-6").hover(
+      function () {
+        console.log("hej");
+        for (let idx = 0; idx < 6; idx++) {
+          if (
+            $(`#6${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
+            player.myTurn
+          )
+            $(`#6${idx}`).css("background-color", "rgb(230,230,230");
+        }
+      },
+      function () {
+        for (let idx = 0; idx < 6; idx++) {
+          if ($(`#6${idx}`).css("background-color") == "rgb(230, 230, 230)")
+            $(`#6${idx}`).css("background-color", "white");
+        }
+      }
+    );
   });
 })();
