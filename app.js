@@ -88,7 +88,7 @@ var rooms = new Map();
 
 app.get("/tictactoe", (req, res) => {
   if (req.session.name == undefined)
-    req.session.name = "anon" + req.sessionID.slice(0, 4);
+    req.session.name = "anon";
 
   res.render("tictactoe", {
     game: "tictactoe",

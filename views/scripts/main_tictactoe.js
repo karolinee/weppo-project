@@ -4,65 +4,77 @@
   console.log("started");
 
   $(document).ready(function () {
-    var sesID = JSON.parse($("#sesid").text());
-    var name = JSON.parse($("#nick").text());
-    var myRoom = sesID;
-    var myTurn = false;
-    var player;
+    let player = {
+      sesID: JSON.parse($("#sesid").text()),
+      name: JSON.parse($("#nick").text()),
+      myTurn: false,
+      myRoom: NaN,
+      player: NaN
+    };
 
     $("#new").on("click", () => {
-      console.log("new tictactoe room");
-      socket.emit("createRoom",{name: name, sesID: sesID} );
-      $("#buttonsToHide").css("visibility", "hidden");
-      $(".list-group").css("display", "none"); //ukrycie pokoi
-      $("#buttonNickChange").css("visibility", "hidden");
-      $("#tictactoe-board").css("display", "block"); //wyświetlenie planszy
-      $("#upperLabel").text("Waiting for second player...");
+      console.log("user " + player.name + "wants to create new tictactoe room");
+      socket.emit("createRoom", {name: player.name, sesID: player.sesID} );
     })
 
     $("button[data-roomID]").on("click", (event) => {
-      console.log("joining room");
+      console.log("user " + player.name + "wants to jaoin a room");
       socket.emit("joinRoom", {
         roomID: $(event.target).data("roomid"),
-        player: sesID,
-        name: name,
+        player: player.sesID,
+        name: player.name,
       });
-      myRoom = $(event.target).data("roomid");
-      $(".list-group").css("display", "none");
-      $("#buttonNickChange").css("visibility", "hidden");
-      $("#buttonsToHide").css("visibility", "hidden");
-      $("#tictactoe-board").css("display", "block"); //wyświetlenie planszy
-
+      player.myRoom = $(event.target).data("roomid");
     });
 
-    socket.on("user has left", (roomID) => {
+    socket.on("roomJoined", (data) => {
+
+      player.myRoom = data.roomID;
+      $("#buttonNickChange").css("visibility", "hidden");
+      $("#buttonsToHide").css("visibility", "hidden");
+      $(".list-group").css("display", "none"); //ukrycie pokoi
+      $("#tictactoe-board").css("display", "block"); //wyświetlenie planszy
+      $("#upperLabel").text("Czekanie na przeciwnika..");
+    });
+
+    socket.on("cannotCreateRoom", (_) => {
+      $('#cantJoin .modal-body').text("Nie można stworzyć pokoju.");
+      $('#cantJoin').modal("show");
+    });
+
+    socket.on("cannotJoinRoom", (_) => {
+      $('#cantJoin .modal-body').text("Nie można dołączyć do pokoj.");
+      $('#cantJoin').modal("show");
+    });
+
+    socket.on("userHasLeft", (roomID) => {
       socket.emit("leaveRoom", {
         roomID: roomID,
-        player: sesID,
+        player: player.sesID,
         forced: true,
       });
       if (!$('#gameEndedModal').hasClass('show')) {
-        $('#gameEndedModal .modal-body').text("Oh no, your opponent has left the game!");
+        $('#gameEndedModal .modal-body').text("O nie, Twój przeciwnik wyszedł z gry!");
         $('#gameEndedModal').modal("show");
       }
-      
     });   
 
     socket.on("gameStarted", (data) => {
       console.log("game started" + data.you);
-      player = data.you;
-      myTurn = data.turn == player ? true : false;
-      console.log(player + " my turn " + myTurn);
-      let text = "";
-      if(myTurn) text = "Make your move";
-      else text="Waiting for opponent move...";
-      $("#upperLabel").text(text);
+      player.player = data.you;
+      player.myTurn = data.turn == player.player;
+      if(player.myTurn) {
+        $("#upperLabel").text("Wykonaj swój ruch");
+      }
+      else {
+        $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
+      }
     });
 
-    socket.on("illegalMove", () => {
+    socket.on("illegalMove", (data) => {
       console.log("illegal move");
-      myTurn = true;
-    })
+      player.myTurn = player.player == data.turn;
+    });
 
     socket.on("moveMade", (data) => {
       console.log("wykonał ruch na pos " + data.pos);
@@ -78,11 +90,14 @@
       </svg>`);
       }
       $(`#${data.pos}`).removeClass("has-hover");
-      myTurn = data.turn == player;
-      if(myTurn) text = "Make your move";
-      else text="Waiting for opponent move...";
-      $("#upperLabel").text(text);
-    })
+      player.myTurn = data.turn == player.player;
+      if(player.myTurn) {
+        $("#upperLabel").text("Wykonaj swój ruch");
+      }
+      else {
+        $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
+      }
+    });
 
     socket.on("gameEnded", (data) => {
       console.log("wykonał ruch na pos " + data.pos);
@@ -100,26 +115,29 @@
       }
       $(`#${data.pos}`).removeClass("has-hover");
       console.log("end " + data.end);
-      let text = "";
-      if(data.won == 0) text="It's a draw!";
-      else if(data.turn == player) text="Oh no, you've lost. Better luck next time!";
-      else text = "Congratulations! You've won!"
-      $('#gameEndedModal .modal-body').text(text);
+
+      if(data.won == 0) {
+        $('#gameEndedModal .modal-body').text("Remis!");
+      }
+      else if (data.turn == player.player){
+        $('#gameEndedModal .modal-body').text("Niestety, przegrałeś. Powodzenia następnym razem");
+      }
+      else {
+        $('#gameEndedModal .modal-body').text("Gratulację! Wygrałeś!");
+      }      
       $('#gameEndedModal').modal("show");
     })
 
 
     $(".tictactoe-box").on("click", (event) => {
-      if(myTurn){
-        myTurn = false;
+      if(player.myTurn && event.target.id){
+        player.myTurn = false;
         socket.emit("madeTurn", {
-          roomID: myRoom,
+          roomID: player.myRoom,
+          player: player.player,
           pos: event.target.id,
         })
       }
-    })
-
-    
-    
+    });    
   });
 })();
