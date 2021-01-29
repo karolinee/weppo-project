@@ -1,0 +1,38 @@
+
+#tictactoe-board{
+    display: none;
+}
+
+
+.board-container {
+    max-height: 370px;
+    max-width: 370px;
+    width: 85vw;  /* 85% of the viewport (body) width */
+    height: 85vw;
+    border-spacing: 4px 2px;
+}
+
+.tictactoe-row{
+    height: 33%;
+}
+
+
+.tictactoe-box{
+    border: solid rgb(255, 255, 255) 1px;
+    background-color: rgb(160, 160, 160);
+    padding: 0;
+    width: 25%;
+    text-align:center;
+}
+.has-hover:hover{
+    background: #c7c7c7;
+}
+.bi-circle {
+    padding-top: 20px;
+    stroke-width: 3px;
+}
+
+#upperLabel{
+    padding: 20px;
+    text-align:center;
+}

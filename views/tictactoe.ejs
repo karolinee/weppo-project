@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <%- include('partials/head') %>
+    <%- include('partials/bootstrap-scripts') %>
+    <link href="styles/style-tictactoe.css" rel="stylesheet" type="text/css">
+    <script src="/socket.io/socket.io.js" ></script>
+    <script src="/scripts/main_tictactoe.js"></script>
+  </head>
+  <body>
+    <%- include('partials/navbar', {nick:nick}) %>
+    <span id='nick' hidden>
+    <%= JSON.stringify(nick); %>
+    </span>
+    <span id='sesid' hidden>
+    <%= JSON.stringify(sesID); %>
+    </span>
+    <nav class="navbar navbar-light bg-light navbar-reverse">
+        <span class="navbar-brand mb-0 h1">Kółko i krzyżyk</span>
+        <div class="top-nav" id="buttonsToHide">
+          <button type="button" class="btn btn-secondary" id="refresh" onclick="location.reload()">Odśwież listę</button>
+          <button type="button" class="btn btn-secondary" id="new">Utwórz pokój</button>
+        </div>
+    </nav>
+    <ul class="list-group">
+      <% for(let [roomID, data] of rooms.entries()){ %>
+        <% if(data.size == 1) {%>
+          <li class="list-group-item clearfix">
+            <%= data.name %><span class="badge badge-light">1/2 graczy</span>
+            <button type="button" class="btn btn-success btn-sm" data-roomID="<%= data.room %>" style="top: 8px">Dołącz do gry</button>
+        </li>
+        <% } else if(data.size == 2) {%>
+          <li class="list-group-item"><%= data.name %><span class="badge badge-light">2/2 graczy</span>
+          </li>
+        <% } %>
+      <% } %>
+    </ul>
+    <div class="container"  id="tictactoe-board">
+      <div class="row">
+        <div class="col-12">
+          <h5 id="upperLabel">Twoja kolej</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="board-container container">
+            <div class="row tictactoe-row">
+                <div class="col tictactoe-box has-hover" id="00"></div>
+                <div class="col tictactoe-box has-hover" id="01"></div>
+                <div class="col tictactoe-box has-hover" id="02"></div>
+            </div>
+            <div class="row tictactoe-row">
+                <div class="col tictactoe-box has-hover" id="10"></div>
+                <div class="col tictactoe-box has-hover" id="11"></div>
+                <div class="col tictactoe-box has-hover" id="12"></div>
+            </div>
+            <div class="row tictactoe-row">
+                <div class="col tictactoe-box has-hover" id="20"></div>
+                <div class="col tictactoe-box has-hover" id="21"></div>
+                <div class="col tictactoe-box has-hover" id="22"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static" id="gameEndedModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Koniec gry</h5>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+            <a href="/" role="button" class="btn btn-secondary">Wyjdź</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="cantJoin">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Niepowodzenie</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </body>
+</html>
+
+  
