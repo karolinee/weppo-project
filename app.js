@@ -27,11 +27,12 @@ app.use(
 
 var rooms4Connect = new Map();
 var roomsTictactoe = new Map();
+var roomsDraughts = new Map();
 
 let games = [
   "tictactoe",
   "4connect",
-  "warcaby"
+  "draughts"
 ];
 
 app.get("/nickchange", function(req, res) {
@@ -59,17 +60,20 @@ app.get("/", function (req, res) {
   });
 });
 
-app.get("/warcaby", function (req, res) {
+app.get("/draughts", function (req, res) {
   if (req.session.name == undefined)
     req.session.name = "anon";
 
-  res.render("game-page", {
-    game: "warcaby",
+  res.render("draughts", {
+    game: "draugths",
     nick: req.session.name,
     sesID: req.sessionID,
-    rooms: rooms,
+    rooms: roomsDraughts,
   });
 });
+
+require("./lib/draughts.js")(io, roomsDraughts);
+//var rooms = new Map();
 
 app.get("/4connect", (req, res) => {
   if (req.session.name == undefined)
