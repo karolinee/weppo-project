@@ -36,26 +36,18 @@
     border-radius: 0px
 }
 
-.white-piece {
-    border: solid rgb(0, 0, 0) 1px;
-    background-color: rgb(250, 140, 160);
-    padding: 0;
+
+
+.piece {
+    border: solid rgb(160, 160, 160) 1px;
+    background-color: rgb(160, 160, 160);
+    margin: 4px;
     width: 25%;
-    width: 100px;
-    height: 100px;
-    border-radius: 0px;
-
-}
-
-.black-piece {
-    border: solid rgb(0, 0, 0) 1px;
-    background-color: rgb(20, 60, 160);
-    padding: 0;
-    width: 25%;
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    display: block;
+   
 }
 
 .has-hover:hover{
@@ -68,4 +60,8 @@
 }
 
 
-
+#opponentLabel {
+    padding-top: 20px;
+    min-height: 10.72px;
+    text-align:center;
+}
