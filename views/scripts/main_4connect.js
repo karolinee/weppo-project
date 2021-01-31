@@ -24,7 +24,11 @@
       console.log("new room button");
       $("#variableJSON").remove();
       console.log(player.name);
-      socket.emit("createRoom", { name: player.name, sesID: player.sesID });
+      socket.emit("createRoom", {
+        name: player.name,
+        sesID: player.sesID,
+        nick: player.name,
+      });
     });
 
     $("button[data-roomID]").on("click", (event) => {
@@ -32,7 +36,7 @@
       socket.emit("joinRoom", {
         roomID: $(event.target).data("roomid"),
         player: player.sesID,
-        name: player.name,
+        nick: player.name,
       });
       player.myRoom = $(event.target).data("roomid");
     });
@@ -79,6 +83,7 @@
       } else {
         $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
       }
+      console.log(data.opponent); //Tutaj wypisuje nick oponenta
     });
 
     socket.on("illegalMove", (data) => {
