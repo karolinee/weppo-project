@@ -77,9 +77,6 @@
       } else {
         $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
       }
-
-
-      console.log(data.board)
       for (let row in data.board) {
         for (let column in data.board[row]) {
 
@@ -98,41 +95,49 @@
 
           }
         }
-
       }
-
     });
-
-
-
 
     socket.on("illegalMove", (data) => {
       console.log("illegalMove " + data.turn);
       player.myTurn = player.player == data.turn;
-      console.log(player.myTurn)
+     // console.log(player.myTurn)
     });
 
+
     socket.on("moveMade", (data) => {
-      console.log('player moves', player.myTurn, data.turn, player.player)
+      //console.log('player moves', player.myTurn, data.turn, player.player)
       let loc1 = "" + data.pos[0] + data.pos[1]
       let loc2 = "" + data.pos[2] + data.pos[3]
-      //if(data.board[data.pos[0]][data.pos[1]] == 1){
       $(`#${loc1}`).css("background-color", "rgb(160,160,160")
       $(`#${loc1}`).css("border-radius", "0px")
       if (data.board[data.pos[2]][data.pos[3]] == 1) {
         $(`#${loc2}`).css("background-color", "rgb(20,60,160")
         $(`#${loc2}`).css("border-radius", "50px")
       }
+      if (data.board[data.pos[2]][data.pos[3]] == 3) {
+        $(`#${loc2}`).css("background-color", "rgb(90,200,180")
+        $(`#${loc2}`).css("border-radius", "20px")
+      }
       if (data.board[data.pos[2]][data.pos[3]] == 2) {
         $(`#${loc2}`).css("background-color", "rgb(250,140,160")
         $(`#${loc2}`).css("border-radius", "50px")
       }
-      //}
-
-
+      if (data.board[data.pos[2]][data.pos[3]] == 4) {
+        $(`#${loc2}`).css("background-color", "rgb(190,37,37")
+        $(`#${loc2}`).css("border-radius", "20px")
+      }
+      //capture
+      if(Math.abs(data.pos[0] - data.pos[2]) == 2){
+        let loc_cap_x = (data.pos[0]+data.pos[2])/2
+        let loc_cap_y = (data.pos[1]+data.pos[3])/2
+        let loc_cap = ""+loc_cap_x + loc_cap_y
+        $(`#${loc_cap}`).css("background-color", "rgb(160,160,160")
+        $(`#${loc_cap}`).css("border-radius", "0px")
+      }
 
       player.myTurn = (data.turn == player.player);
-      console.log('change player', player.myTurn)
+     // console.log('change player', player.myTurn)
       if (player.myTurn) {
         $("#upperLabel").text("Wykonaj swój ruch");
       } else {
@@ -142,9 +147,36 @@
 
     socket.on("gameEnded", (data) => {
       console.log("game ended won: " + data.won);
-      let id = "" + data.column + data.row;
-      let color = data.turn == 2 ? "red" : "yellow";
-      $(`#${id}`).css("background-color", color);
+
+    let loc1 = "" + data.pos[0] + data.pos[1]
+    let loc2 = "" + data.pos[2] + data.pos[3]
+    $(`#${loc1}`).css("background-color", "rgb(160,160,160")
+    $(`#${loc1}`).css("border-radius", "0px")
+    if (data.board[data.pos[2]][data.pos[3]] == 1) {
+      $(`#${loc2}`).css("background-color", "rgb(20,60,160")
+      $(`#${loc2}`).css("border-radius", "50px")
+    }
+    if (data.board[data.pos[2]][data.pos[3]] == 3) {
+      $(`#${loc2}`).css("background-color", "rgb(90,200,180")
+      $(`#${loc2}`).css("border-radius", "20px")
+    }
+    if (data.board[data.pos[2]][data.pos[3]] == 2) {
+      $(`#${loc2}`).css("background-color", "rgb(250,140,160")
+      $(`#${loc2}`).css("border-radius", "50px")
+    }
+    if (data.board[data.pos[2]][data.pos[3]] == 4) {
+      $(`#${loc2}`).css("background-color", "rgb(190,37,37")
+      $(`#${loc2}`).css("border-radius", "20px")
+    }
+    //capture
+    if(Math.abs(data.pos[0] - data.pos[2]) == 2){
+      let loc_cap_x = (data.pos[0]+data.pos[2])/2
+      let loc_cap_y = (data.pos[1]+data.pos[3])/2
+      let loc_cap = ""+loc_cap_x + loc_cap_y
+      $(`#${loc_cap}`).css("background-color", "rgb(160,160,160")
+      $(`#${loc_cap}`).css("border-radius", "0px")
+    }
+
       player.myTurn = false;
       if (data.won == 0) {
         $("#gameEndedModal .modal-body").text("Remis!");
@@ -161,30 +193,24 @@
 
     $(".draughts-box-black").on("click", (event) => {
       event.stopPropagation();
-      console.log('playing', player.player, player.myTurn)
+      //console.log('playing', player.player, player.myTurn)
       if (!player.firstClick) {
         player.row1 = parseInt(event.target.id.charAt(0), 10);
         player.col1 = parseInt(event.target.id.charAt(1), 10);
 
       }
-      player.firstClick = !player.firstClick
-      //if (new_row1 != player.row2 || player.row2==Nan)
-      // player.row1 = new_row1
-      // if (new_col1 != player.col2 || player.col2==Nan)
-      //player.col1 = new_col1
-      console.log('first clicked in ' + event.target.id, player.row1, player.col1)
-      // await new Promise(r => setTimeout(r, 500));
-      //let row1 = row
-      //let col1 = col
+      if (player.myTurn )
+        player.firstClick = !player.firstClick
+      //console.log('first clicked in ' + event.target.id, player.row1, player.col1)
+
       $(".draughts-box-black").on("click", (event) => {
-        console.log('first in second', player.row1, player.col1)
+       // console.log('first in second', player.row1, player.col1)
         player.row2 = parseInt(event.target.id.charAt(0), 10);
         player.col2 = parseInt(event.target.id.charAt(1), 10);
         if (player.myTurn) {
           player.myTurn = false;
-          console.log('2 clicked in ' + event.target.id)
           //console.log('2 click', row2, ' ', col2)
-          console.log([player.row1, player.col1, player.row2, player.col2])
+         // console.log([player.row1, player.col1, player.row2, player.col2])
           socket.emit("checkMoves", {
             player: player.player,
             roomID: player.myRoom,
@@ -194,7 +220,6 @@
       })
 
     });
-
 
     $(".tictactoe-box").on("click", (event) => {
 
