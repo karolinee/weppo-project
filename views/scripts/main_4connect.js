@@ -83,7 +83,8 @@
       } else {
         $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
       }
-      console.log(data.opponent); //Tutaj wypisuje nick oponenta
+      $("#opponentLabel").text("Grasz z " + data.opponent);
+      //console.log(data.opponent); //Tutaj wypisuje nick oponenta
     });
 
     socket.on("illegalMove", (data) => {

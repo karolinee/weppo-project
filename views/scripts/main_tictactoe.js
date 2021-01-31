@@ -71,9 +71,10 @@
       if (player.myTurn) {
         $("#upperLabel").text("Wykonaj swój ruch");
       } else {
-        $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
+        $("#upperLabel").text("Zaczekaj na ruch przeciwnika...");
       }
-      console.log(data.opponent); //Tutaj wypisuje nick przeciwnika
+      $("#opponentLabel").text("Grasz z " + data.opponent);
+      //console.log(data.opponent); //Tutaj wypisuje nick przeciwnika
     });
 
     socket.on("illegalMove", (data) => {

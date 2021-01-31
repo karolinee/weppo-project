@@ -32,7 +32,13 @@
     stroke-width: 3px;
 }
 
-#upperLabel{
-    padding: 20px;
+#upperLabel {
+    padding-bottom: 20px;
+    text-align:center;
+}
+
+#opponentLabel {
+    padding-top: 20px;
+    min-height: 10.72px;
     text-align:center;
 }
