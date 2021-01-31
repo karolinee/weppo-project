@@ -10,6 +10,11 @@
       myTurn: false,
       myRoom: NaN,
       player: NaN,
+      row1: NaN,
+      col1: NaN,
+      row2: NaN,
+      col2: NaN,
+      firstClick : false,
     };
 
     $("#new").on("click", function () {
@@ -36,6 +41,7 @@
       $(".list-group").css("display", "none"); //ukrycie pokoi
       $("#draughts-board").css("display", "block"); //wyświetlenie planszy
       $("#upperLabel").text("Czekanie na przeciwnika..");
+
     });
 
     socket.on("cannotCreateRoom", (_) => {
@@ -74,19 +80,19 @@
 
 
       console.log(data.board)
-      for (let row in data.board) { 
-        for (let column in data.board[row]) { 
+      for (let row in data.board) {
+        for (let column in data.board[row]) {
 
           if (data.board[row][column] == 1) {
             //console.log(data.board[row][column])
-            var loc = row.toString().concat(column.toString()) 
+            var loc = row.toString().concat(column.toString())
             //console.log(loc)//starting position
             var new_loc = loc.toString()
             $(`#${loc}`).css("background-color", "rgb(20,60,160")
-            $(`#${loc}`).css("border-radius", "50px")  
-            
+            $(`#${loc}`).css("border-radius", "50px")
+
           } else if (data.board[row][column] == 2) {
-            var loc = row.toString().concat(column.toString()) 
+            var loc = row.toString().concat(column.toString())
             $(`#${loc}`).css("background-color", "rgb(250,140,160")
             $(`#${loc}`).css("border-radius", "50px")
 
@@ -103,14 +109,30 @@
     socket.on("illegalMove", (data) => {
       console.log("illegalMove " + data.turn);
       player.myTurn = player.player == data.turn;
+      console.log(player.myTurn)
     });
 
     socket.on("moveMade", (data) => {
-      console.log("now moves " + data.turn);
-      let id = "" + data.column + data.row;
-      let color = data.turn == 2 ? "red" : "yellow";
-      $(`#${id}`).css("background-color", color);
-      player.myTurn = data.turn == player.player;
+      console.log('player moves', player.myTurn, data.turn, player.player)
+      let loc1 = "" + data.pos[0] + data.pos[1]
+      let loc2 = "" + data.pos[2] + data.pos[3]
+      //if(data.board[data.pos[0]][data.pos[1]] == 1){
+      $(`#${loc1}`).css("background-color", "rgb(160,160,160")
+      $(`#${loc1}`).css("border-radius", "0px")
+      if (data.board[data.pos[2]][data.pos[3]] == 1) {
+        $(`#${loc2}`).css("background-color", "rgb(20,60,160")
+        $(`#${loc2}`).css("border-radius", "50px")
+      }
+      if (data.board[data.pos[2]][data.pos[3]] == 2) {
+        $(`#${loc2}`).css("background-color", "rgb(250,140,160")
+        $(`#${loc2}`).css("border-radius", "50px")
+      }
+      //}
+
+
+
+      player.myTurn = (data.turn == player.player);
+      console.log('change player', player.myTurn)
       if (player.myTurn) {
         $("#upperLabel").text("Wykonaj swój ruch");
       } else {
@@ -136,12 +158,51 @@
       $("#gameEndedModal").modal("show");
     });
 
+
     $(".draughts-box-black").on("click", (event) => {
-      if (player.myTurn) {
+      event.stopPropagation();
+      console.log('playing', player.player, player.myTurn)
+      if (!player.firstClick) {
+        player.row1 = parseInt(event.target.id.charAt(0), 10);
+        player.col1 = parseInt(event.target.id.charAt(1), 10);
+
+      }
+      player.firstClick = !player.firstClick
+      //if (new_row1 != player.row2 || player.row2==Nan)
+      // player.row1 = new_row1
+      // if (new_col1 != player.col2 || player.col2==Nan)
+      //player.col1 = new_col1
+      console.log('first clicked in ' + event.target.id, player.row1, player.col1)
+      // await new Promise(r => setTimeout(r, 500));
+      //let row1 = row
+      //let col1 = col
+      $(".draughts-box-black").on("click", (event) => {
+        console.log('first in second', player.row1, player.col1)
+        player.row2 = parseInt(event.target.id.charAt(0), 10);
+        player.col2 = parseInt(event.target.id.charAt(1), 10);
+        if (player.myTurn) {
+          player.myTurn = false;
+          console.log('2 clicked in ' + event.target.id)
+          //console.log('2 click', row2, ' ', col2)
+          console.log([player.row1, player.col1, player.row2, player.col2])
+          socket.emit("checkMoves", {
+            player: player.player,
+            roomID: player.myRoom,
+            pos: [player.row1, player.col1, player.row2, player.col2]
+          })
+        }
+      })
+
+    });
+
+
+    $(".tictactoe-box").on("click", (event) => {
+
+      if (player.myTurn && event.target.id) {
         player.myTurn = false;
-        console.log('clicked in ' + event.target.id)
         socket.emit("madeTurn", {
           roomID: player.myRoom,
+          player: player.player,
           pos: event.target.id,
         })
       }
