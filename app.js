@@ -32,7 +32,7 @@ var roomsDraughts = new Map();
 let games = [
   "tictactoe",
   "4connect",
-  "draughts"
+  "Warcaby"
 ];
 
 app.get("/nickchange", function(req, res) {
@@ -60,12 +60,12 @@ app.get("/", function (req, res) {
   });
 });
 
-app.get("/draughts", function (req, res) {
+app.get("/warcaby", function (req, res) {
   if (req.session.name == undefined)
     req.session.name = "anon";
 
   res.render("draughts", {
-    game: "draugths",
+    game: "Warcaby",
     nick: req.session.name,
     sesID: req.sessionID,
     rooms: roomsDraughts,
