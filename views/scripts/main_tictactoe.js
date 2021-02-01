@@ -1,8 +1,6 @@
 (function () {
   var socket = io("/tictactoe");
 
-  console.log("started");
-
   $(document).ready(function () {
     let player = {
       sesID: JSON.parse($("#sesid").text()),
@@ -13,7 +11,6 @@
     };
 
     $("#new").on("click", () => {
-      console.log("user " + player.name + "wants to create new tictactoe room");
       socket.emit("createRoom", {
         name: player.name,
         sesID: player.sesID,
@@ -22,7 +19,6 @@
     });
 
     $("button[data-roomID]").on("click", (event) => {
-      console.log("user " + player.name + "wants to jaoin a room");
       socket.emit("joinRoom", {
         roomID: $(event.target).data("roomid"),
         player: player.sesID,
@@ -65,7 +61,6 @@
     });
 
     socket.on("gameStarted", (data) => {
-      console.log("game started" + data.you);
       player.player = data.you;
       player.myTurn = data.turn == player.player;
       if (player.myTurn) {
@@ -74,17 +69,13 @@
         $("#upperLabel").text("Zaczekaj na ruch przeciwnika...");
       }
       $("#opponentLabel").text("Grasz z " + data.opponent);
-      //console.log(data.opponent); //Tutaj wypisuje nick przeciwnika
     });
 
     socket.on("illegalMove", (data) => {
-      console.log("illegal move");
       player.myTurn = player.player == data.turn;
     });
 
     socket.on("moveMade", (data) => {
-      console.log("wykonał ruch na pos " + data.pos);
-      console.log("teraz kolej " + data.turn);
       if (data.turn == 2) {
         $(`#${data.pos}`)
           .append(`<svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
@@ -106,8 +97,6 @@
     });
 
     socket.on("gameEnded", (data) => {
-      console.log("wykonał ruch na pos " + data.pos);
-      console.log("gra zakończona");
       if (data.turn == 2) {
         $(`#${data.pos}`)
           .append(`<svg xmlns="http://www.w3.org/2000/svg" width="80%" height="80%" fill="currentColor" class="bi bi-circle" viewBox="0 0 16 16">
@@ -120,7 +109,6 @@
       </svg>`);
       }
       $(`#${data.pos}`).removeClass("has-hover");
-      console.log("end " + data.end);
 
       if (data.won == 0) {
         $("#gameEndedModal .modal-body").text("Remis!");

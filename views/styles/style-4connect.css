@@ -16,18 +16,7 @@
 .connect-box {
 	background-color: white;
 	border-radius: 50%;
-	/*width: 120px !important;
-	height: 120px !important;*/
 	width: 14%;
 	margin: 10px;
 }
 
-#upperLabel {
-    padding-bottom: 20px;
-    text-align:center;
-}
-
-#opponentLabel {
-    padding-top: 20px;
-    text-align:center;
-}

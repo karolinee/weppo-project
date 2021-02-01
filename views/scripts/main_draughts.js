@@ -1,8 +1,6 @@
 (function () {
   var socket = io("/draughts");
 
-  console.log("started");
-
   $(document).ready(function () {
     let player = {
       sesID: JSON.parse($("#sesid").text()),
@@ -18,16 +16,12 @@
     };
 
     $("#new").on("click", function () {
-      console.log("new room button");
-      $("#variableJSON").remove();
-      console.log(player.name);
       socket.emit("createRoom", {
         name: player.name, sesID: player.sesID, nick: player.name,
       });
     });
 
     $("button[data-roomID]").on("click", (event) => {
-      console.log("joining room");
       socket.emit("joinRoom", {
         roomID: $(event.target).data("roomid"),
         player: player.sesID,
@@ -71,7 +65,6 @@
     });
 
     socket.on("gameStarted", (data) => {
-      console.log("game started" + data.you);
       player.player = data.you;
       player.myTurn = data.turn == player.player
       if (player.myTurn) {
@@ -80,7 +73,6 @@
         $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
       }
       $("#opponentLabel").text("Grasz z " + data.opponent);
-      console.log(data.board)
       for (let row in data.board) {
         for (let column in data.board[row]) {
           var loc = row.toString().concat(column.toString())+'0'
@@ -97,14 +89,11 @@
     });
 
     socket.on("illegalMove", (data) => {
-      console.log("illegalMove " + data.turn);
       player.myTurn = player.player == data.turn;
-      // console.log(player.myTurn)
     });
 
 
     socket.on("moveMade", (data) => {
-      //console.log('player moves', player.myTurn, data.turn, player.player)
       let loc1 = "" + data.pos[0] + data.pos[1]+0
       let loc2 = "" + data.pos[2] + data.pos[3]+0
       $(`#${loc1}`).css("background-color", "rgb(160,160,160")
@@ -140,7 +129,6 @@
       }
 
       player.myTurn = (data.turn == player.player);
-      // console.log('change player', player.myTurn)
       if (player.myTurn) {
         $("#upperLabel").text("Wykonaj swój ruch");
       } else {
@@ -149,8 +137,6 @@
     });
 
     socket.on("gameEnded", (data) => {
-      console.log("game ended won: " + data.won);
-
       let loc1 = "" + data.pos[0] + data.pos[1]+0
       let loc2 = "" + data.pos[2] + data.pos[3]+0
       $(`#${loc1}`).css("background-color", "rgb(160,160,160")
@@ -200,8 +186,6 @@
 
 
     $(".draughts-box-black").on("click", (event) => {
-      //event.stopPropagation();
-      //console.log('playing', player.player, player.myTurn)
       if (!player.firstClick) {
         player.row1 = parseInt(event.target.id.charAt(0), 10);
         player.col1 = parseInt(event.target.id.charAt(1), 10);
@@ -209,16 +193,12 @@
       }
       if (player.myTurn)
         player.firstClick = !player.firstClick
-      console.log('first clicked in ' + event.target.id, player.row1, player.col1)
 
       $(".draughts-box-black").on("click", (event) => {
-        // console.log('first in second', player.row1, player.col1)
         player.row2 = parseInt(event.target.id.charAt(0), 10);
         player.col2 = parseInt(event.target.id.charAt(1), 10);
         if (player.myTurn) {
           player.myTurn = false;
-          console.log('2 click', player.row2, ' ', player.col2)
-          // console.log([player.row1, player.col1, player.row2, player.col2])
           socket.emit("checkMoves", {
             player: player.player,
             roomID: player.myRoom,

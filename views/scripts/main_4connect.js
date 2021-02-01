@@ -1,8 +1,6 @@
 (function () {
   var socket = io("/4connect");
 
-  console.log("started");
-
   $(document).ready(function () {
     var translateColumn = new Map();
     translateColumn.set(0, "a");
@@ -21,9 +19,6 @@
     };
 
     $("#new").on("click", function () {
-      console.log("new room button");
-      $("#variableJSON").remove();
-      console.log(player.name);
       socket.emit("createRoom", {
         name: player.name,
         sesID: player.sesID,
@@ -32,7 +27,6 @@
     });
 
     $("button[data-roomID]").on("click", (event) => {
-      console.log("joining room");
       socket.emit("joinRoom", {
         roomID: $(event.target).data("roomid"),
         player: player.sesID,
@@ -45,8 +39,8 @@
       player.myRoom = data.roomID;
       $("#buttonNickChange").css("visibility", "hidden");
       $("#buttonsToHide").css("visibility", "hidden");
-      $(".list-group").css("display", "none"); //ukrycie pokoi
-      $("#connect-board").css("display", "block"); //wyświetlenie planszy
+      $(".list-group").css("display", "none");
+      $("#connect-board").css("display", "block");
       $("#upperLabel").text("Czekanie na przeciwnika..");
     });
 
@@ -75,7 +69,6 @@
     });
 
     socket.on("gameStarted", (data) => {
-      console.log("game started" + data.you);
       player.player = data.you;
       player.myTurn = data.turn == player.player;
       if (player.myTurn) {
@@ -84,16 +77,13 @@
         $("#upperLabel").text("Zaczekaj na ruch przeciwnika..");
       }
       $("#opponentLabel").text("Grasz z " + data.opponent);
-      //console.log(data.opponent); //Tutaj wypisuje nick oponenta
     });
 
     socket.on("illegalMove", (data) => {
-      console.log("illegalMove " + data.turn);
       player.myTurn = player.player == data.turn;
     });
 
     socket.on("moveMade", (data) => {
-      console.log("now moves " + data.turn);
       let id = "" + data.column + data.row;
       let color = data.turn == 2 ? "red" : "yellow";
       $(`#${id}`).css("background-color", color);
@@ -106,7 +96,6 @@
     });
 
     socket.on("gameEnded", (data) => {
-      console.log("game ended won: " + data.won);
       let id = "" + data.column + data.row;
       let color = data.turn == 2 ? "red" : "yellow";
       $(`#${id}`).css("background-color", color);
@@ -195,7 +184,6 @@
     });
     $(".4-connect-column-0").hover(
       function () {
-        console.log("hej");
         for (let idx = 0; idx < 6; idx++) {
           if (
             $(`#0${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
@@ -213,7 +201,6 @@
     );
     $(".4-connect-column-1").hover(
       function () {
-        console.log("hej");
         for (let idx = 0; idx < 6; idx++) {
           if (
             $(`#1${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
@@ -231,7 +218,6 @@
     );
     $(".4-connect-column-2").hover(
       function () {
-        console.log("hej");
         for (let idx = 0; idx < 6; idx++) {
           if (
             $(`#2${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
@@ -249,7 +235,6 @@
     );
     $(".4-connect-column-3").hover(
       function () {
-        console.log("hej");
         for (let idx = 0; idx < 6; idx++) {
           if (
             $(`#3${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
@@ -267,7 +252,6 @@
     );
     $(".4-connect-column-4").hover(
       function () {
-        console.log("hej");
         for (let idx = 0; idx < 6; idx++) {
           if (
             $(`#4${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
@@ -285,7 +269,6 @@
     );
     $(".4-connect-column-5").hover(
       function () {
-        console.log("hej");
         for (let idx = 0; idx < 6; idx++) {
           if (
             $(`#5${idx}`).css("background-color") == "rgb(255, 255, 255)" &&
@@ -303,7 +286,6 @@
     );
     $(".4-connect-column-6").hover(
       function () {
-        console.log("hej");
         for (let idx = 0; idx < 6; idx++) {
           if (
             $(`#6${idx}`).css("background-color") == "rgb(255, 255, 255)" &&

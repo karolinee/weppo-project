@@ -7,7 +7,7 @@
 .board-container {
     max-height: 370px;
     max-width: 370px;
-    width: 85vw;  /* 85% of the viewport (body) width */
+    width: 85vw; 
     height: 85vw;
     border-spacing: 4px 2px;
 }
@@ -30,15 +30,4 @@
 .bi-circle {
     padding-top: 20px;
     stroke-width: 3px;
-}
-
-#upperLabel {
-    padding-bottom: 20px;
-    text-align:center;
-}
-
-#opponentLabel {
-    padding-top: 20px;
-    min-height: 10.72px;
-    text-align:center;
 }

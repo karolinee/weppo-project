@@ -1,8 +1,6 @@
 var express = require("express");
 var session = require("express-session");
-var multer = require("multer");
 var app = express();
-var upload = multer();
 var server = require("http").Server(app);
 var io = require("socket.io")(server);
 
@@ -29,11 +27,11 @@ var rooms4Connect = new Map();
 var roomsTictactoe = new Map();
 var roomsDraughts = new Map();
 
-let games = [
-  "tictactoe",
-  "4connect",
-  "Warcaby"
-];
+let games = {
+  "tictactoe": "Kółko i krzyżyk",
+  "4connect": "4 w rzędzie",
+  "draughts": "Warcaby",
+}
 
 app.get("/nickchange", function(req, res) {
   if (req.session.name == undefined)
@@ -42,7 +40,7 @@ app.get("/nickchange", function(req, res) {
 });
 
 app.post("/nickchange", function(req, res) {
-  let newNick = req.body.newNick;
+  let newNick = req.body.newNick.trim();
   if(newNick){
     req.session.name = newNick;
   }
@@ -60,12 +58,11 @@ app.get("/", function (req, res) {
   });
 });
 
-app.get("/warcaby", function (req, res) {
+app.get("/draughts", function (req, res) {
   if (req.session.name == undefined)
     req.session.name = "anon";
 
   res.render("draughts", {
-    game: "Warcaby",
     nick: req.session.name,
     sesID: req.sessionID,
     rooms: roomsDraughts,
@@ -73,14 +70,12 @@ app.get("/warcaby", function (req, res) {
 });
 
 require("./lib/draughts.js")(io, roomsDraughts);
-//var rooms = new Map();
 
 app.get("/4connect", (req, res) => {
   if (req.session.name == undefined)
     req.session.name = "anon";
 
   res.render("4connect", {
-    game: "4connect",
     nick: req.session.name,
     sesID: req.sessionID,
     rooms: rooms4Connect,
@@ -88,14 +83,12 @@ app.get("/4connect", (req, res) => {
 });
 
 require("./lib/4connect.js")(io, rooms4Connect);
-var rooms = new Map();
 
 app.get("/tictactoe", (req, res) => {
   if (req.session.name == undefined)
     req.session.name = "anon";
 
   res.render("tictactoe", {
-    game: "tictactoe",
     nick: req.session.name,
     sesID: req.sessionID,
     rooms: roomsTictactoe,

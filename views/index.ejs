@@ -6,9 +6,9 @@
   <body>
     <%- include('partials/navbar', {nick:nick}) %>
     <div class="card-deck">
-        <% games.forEach(function(game) { %>
-            <%- include('partials/game-card', {game: game}) %>
-        <% }) %>
+      <% for (let [game, name] of Object.entries(games)){%>
+        <%- include('partials/game-card', {game: game, name: name}) %>
+      <% } %>
     </div>
     <%- include('partials/bootstrap-scripts') %>
   </body>
